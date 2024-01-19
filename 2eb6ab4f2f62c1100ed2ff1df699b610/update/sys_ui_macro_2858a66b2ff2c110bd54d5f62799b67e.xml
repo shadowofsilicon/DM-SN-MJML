@@ -10,14 +10,14 @@
         <sys_created_by>jacebenson</sys_created_by>
         <sys_created_on>2022-04-17 21:50:37</sys_created_on>
         <sys_id>2858a66b2ff2c110bd54d5f62799b67e</sys_id>
-        <sys_mod_count>16</sys_mod_count>
+        <sys_mod_count>18</sys_mod_count>
         <sys_name>renderHtml</sys_name>
         <sys_package display_value="MJML" source="x_298439_mjml">2eb6ab4f2f62c1100ed2ff1df699b610</sys_package>
         <sys_policy/>
         <sys_scope display_value="MJML">2eb6ab4f2f62c1100ed2ff1df699b610</sys_scope>
         <sys_update_name>sys_ui_macro_2858a66b2ff2c110bd54d5f62799b67e</sys_update_name>
-        <sys_updated_by>jacebenson</sys_updated_by>
-        <sys_updated_on>2022-04-18 01:03:28</sys_updated_on>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2024-01-19 22:00:35</sys_updated_on>
         <xml><![CDATA[<?xml version="1.0" encoding="utf-8" ?>
 <j:jelly trim="false" xmlns:j="jelly:core" xmlns:g="glide" xmlns:j2="null" xmlns:g2="null">
 	<g2:evaluate var="jvar_stamp">  
@@ -40,8 +40,7 @@
 			<button type="button" onClick="x_298439_ui.ui.rotate()">Rotate</button>
 		</div>
 		<div >
-			<iframe height="640px" width="360px" style="
-						   resize: both;" id="mjmlRender" srcdoc=""></iframe>
+			<iframe height="1366px" width="768px" style="resize: both;" id="mjmlRender" srcdoc=""></iframe>
 		</div>
 	</div>
 </j:jelly>]]></xml>

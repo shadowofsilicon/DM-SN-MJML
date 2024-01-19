@@ -9,67 +9,102 @@
         <name>util</name>
         <script><![CDATA[var util = Class.create();
 util.prototype = Object.extendsObject(global.AbstractAjaxProcessor, {
-	endpoint: gs.getProperty('x_298439_mjml.api.endpoint'),
-	apiKey: gs.getProperty('x_298439_mjml.api.key'),
-	username: (function(){
-		if(this.apiKey && this.apiKey.indexOf(':')>0){
-			return this.apiKey.split(':')[0];
-		}
-		return false;
-	})(),
-	password: (function(){
-		if(this.apiKey && this.apiKey.indexOf(':')>0){
-			return this.apiKey.split(':')[1];
-		}
-		return false;
-	})(),
-	demo: function(){
-		return JSON.stringify({"hoo":"raa"});
-	},
+    endpoint: gs.getProperty('x_298439_mjml.api.endpoint'),
+    apiKey: gs.getProperty('x_298439_mjml.api.key'),
+    username: (function() {
+        var apiKey = gs.getProperty('x_298439_mjml.api.key');
+        if (apiKey && apiKey.indexOf(':') > 0) {
+            return apiKey.split(':')[0];
+        }
+        return false;
+    })(),
+    password: (function() {
+        var apiKey = gs.getProperty('x_298439_mjml.api.key');
+        if (apiKey && apiKey.indexOf(':') > 0) {
+            return apiKey.split(':')[1];
+        }
+        return false;
+    })(),
     transpile: function() {
-        var inputObj = JSON.parse(this.getParameter('sysparm_obj'));
-		var html = this.getutil(inputObj.mjml, inputObj.sys_id);
-        var returnObj = {
-            from: "server",
-            input: inputObj,
-			html: html
-        };
-        return JSON.stringify(returnObj);
+        var returnObj = {};
+        try {
+            var inputObj = JSON.parse(this.getParameter('sysparm_obj'));
+            var outputObj = this.getutil(inputObj.mjml, inputObj.sys_id);
+            returnObj.from = "server";
+			returnObj.error = outputObj.error;
+            returnObj.input = inputObj;
+            returnObj.html = outputObj.html;
+			returnObj.mjml_errors = outputObj.mjml_errors;
+			returnObj.mjml_version = outputObj.mjml_version;
+
+            return JSON.stringify(returnObj);
+        } catch (error) {
+            returnObj.error = 'Error in transpile: ' + error;
+        }
     },
     getutil: function(mjml, currentSysId) {
-		var current = new GlideRecord('x_298439_mjml_templates');
-		current.get(currentSysId);
-        var isutilAPIinUse = this.endpoint == 'https://api.mjml.io/v1/render';
-        if (isutilAPIinUse && this.apiKey == '') {
-            gs.error('x_298439_mjml.api.key is empty');
-            return;
-        }
-        var obj = {};
-        obj.mjml = mjml;
-        var request = new sn_ws.RESTMessageV2();
-        request.setHttpMethod('post');
-        if (this.username && this.password) {
-            request.setBasicAuth(username, password);
-        }
-        request.setEndpoint(this.endpoint);
-        request.setRequestHeader('Content-Type', 'application/json');
-        request.setRequestBody(JSON.stringify(obj));
-        var response = request.execute();
-        var evaluator = new GlideScopedEvaluator();
-        var output = evaluator.evaluateScript(current, "template_variables", null);
+
         try {
-            var returnedHTML = JSON.parse(response.getBody()).html;
+
+            var returnObj = {
+                error: false,
+                html: null
+            };
+
+            var isutilAPIinUse = this.endpoint == 'https://api.mjml.io/v1/render';
+            if (isutilAPIinUse && this.apiKey == '') {
+                returnObj.error = 'x_298439_mjml.api.key is empty';
+                return returnObj;
+            }
+
+            var obj = {};
+            obj.mjml = mjml;
+
+            var request = new sn_ws.RESTMessageV2();
+            request.setHttpMethod('post');
+            if (this.username && this.password) {
+                request.setBasicAuth(this.username, this.password);
+            }
+            request.setEndpoint(this.endpoint);
+            request.setRequestHeader('Content-Type', 'application/json');
+            request.setRequestBody(JSON.stringify(obj));
+
+            var response = request.execute();
+
+            var evaluator = new GlideScopedEvaluator();
+
+            var template = new GlideRecordSecure('x_298439_mjml_templates');
+            template.get(currentSysId);
+            var output = evaluator.evaluateScript(template, "template_variables", null);
+
+			if (response.haveError()) {
+				returnObj.error = response.getErrorMessage();
+			} else {
+				var responseBody = JSON.parse(response.getBody());
+				returnObj.html = responseBody.html;
+				//gs.addErrorMessage(JSON.stringify(responseBody.errors));
+				returnObj.mjml_errors = JSON.stringify(responseBody.errors);
+				returnObj.mjml_version = responseBody.mjml_version;
+			}
+            //returnObj.error = response.haveError() ? response.getErrorMessage() : false;
+            //returnObj.html = !response.haveError() ? JSON.parse(response.getBody()).html : '';
+			//gs.addErrorMessage(JSON.stringify(JSON.parse(response.getBody()).errors));
+			//returnObj.mjml_error = !response.haveError() ? JSON.parse(response.getBody()).errors : '';
+
             for (var prop in output) {
                 var replaceString = '{{mjml.' + prop + '}}';
                 var regex = new RegExp(replaceString, 'g');
-                returnedHTML = returnedHTML.replace(regex, output[prop]);
+                returnObj.html = returnObj.html.replace(regex, output[prop]);
             }
-			return returnedHTML;
+
+            return returnObj;
+
         } catch (error) {
-			var errorMessage = 'Error with response for util: ' + error;
-            gs.error(errorMessage);
-			return errorMessage
+            var errorMessage = 'Error with response: ' + error;
+            returnObj.error = errorMessage;
+            return returnObj;
         }
+
     },
     type: 'util'
 });]]></script>
@@ -77,13 +112,13 @@ util.prototype = Object.extendsObject(global.AbstractAjaxProcessor, {
         <sys_created_by>jacebenson</sys_created_by>
         <sys_created_on>2022-04-17 21:16:49</sys_created_on>
         <sys_id>0e2edee32fb2c110bd54d5f62799b6f7</sys_id>
-        <sys_mod_count>9</sys_mod_count>
+        <sys_mod_count>114</sys_mod_count>
         <sys_name>util</sys_name>
         <sys_package display_value="MJML" source="x_298439_mjml">2eb6ab4f2f62c1100ed2ff1df699b610</sys_package>
         <sys_policy>read</sys_policy>
         <sys_scope display_value="MJML">2eb6ab4f2f62c1100ed2ff1df699b610</sys_scope>
         <sys_update_name>sys_script_include_0e2edee32fb2c110bd54d5f62799b6f7</sys_update_name>
-        <sys_updated_by>jacebenson</sys_updated_by>
-        <sys_updated_on>2022-04-17 21:38:28</sys_updated_on>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2024-01-19 21:21:54</sys_updated_on>
     </sys_script_include>
 </record_update>

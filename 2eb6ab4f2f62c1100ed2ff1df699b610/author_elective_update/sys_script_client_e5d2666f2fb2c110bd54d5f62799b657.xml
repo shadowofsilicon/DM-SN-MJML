@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update sys_domain="global" table="sys_script_client">
+    <sys_script_client action="DELETE">
+        <active>false</active>
+        <applies_extended>false</applies_extended>
+        <condition/>
+        <description/>
+        <field>mjml</field>
+        <global>true</global>
+        <isolate_script>true</isolate_script>
+        <messages/>
+        <name>test cs</name>
+        <order/>
+        <script><![CDATA[function onSubmit() {
+   //Type appropriate comment here, and begin script below
+	var modifiedFields = g_form.modifiedFields.x_298439_mjml_templates
+	if(modifiedFields.mjml && modifiedFields.html){// if mjml changed, and html changed
+		return true
+	}
+	return false;
+   	g_form.hideFieldMsg('mjml', true);
+	g_form.showFieldMsg('mjml','Loading...','info');
+    var ga = new GlideAjax('x_298439_mjml.util');
+    ga.addParam('sysparm_name', 'transpile');
+    ga.addParam('sysparm_obj', JSON.stringify({
+        "mjml": g_form.getValue('mjml'),
+        "sys_id": g_form.getValue('sys_id')
+    }));
+    ga.getXML(function waitForResponse(response) {
+		g_form.hideFieldMsg('mjml', true);
+        var responseDocument = response.responseXML.documentElement;
+        var answer = responseDocument.getAttribute('answer');
+        var serverObj = JSON.parse(answer);
+		g_form.setValue('html', serverObj.html)
+		x_298439_ui.ui.setHTML(serverObj.html)
+		return true;
+    })
+	return false;
+}]]></script>
+        <sys_class_name>sys_script_client</sys_class_name>
+        <sys_created_by>jacebenson</sys_created_by>
+        <sys_created_on>2022-04-17 21:26:25</sys_created_on>
+        <sys_domain>global</sys_domain>
+        <sys_domain_path>/</sys_domain_path>
+        <sys_id>e5d2666f2fb2c110bd54d5f62799b657</sys_id>
+        <sys_mod_count>13</sys_mod_count>
+        <sys_name>test cs</sys_name>
+        <sys_overrides/>
+        <sys_package display_value="MJML" source="x_298439_mjml">2eb6ab4f2f62c1100ed2ff1df699b610</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="MJML">2eb6ab4f2f62c1100ed2ff1df699b610</sys_scope>
+        <sys_update_name>sys_script_client_e5d2666f2fb2c110bd54d5f62799b657</sys_update_name>
+        <sys_updated_by>jacebenson</sys_updated_by>
+        <sys_updated_on>2022-04-18 00:07:44</sys_updated_on>
+        <table>x_298439_mjml_templates</table>
+        <type>onSubmit</type>
+        <ui_type>10</ui_type>
+        <view/>
+    </sys_script_client>
+<sys_update_version action="INSERT_OR_UPDATE">
+        <action>DELETE</action>
+        <application display_value="MJML">2eb6ab4f2f62c1100ed2ff1df699b610</application>
+        <file_path/>
+        <instance_id>7ad3e02bdb71f550ae4c9027c5961984</instance_id>
+        <instance_name>dev187534</instance_name>
+        <name>sys_script_client_e5d2666f2fb2c110bd54d5f62799b657</name>
+        <payload>&lt;?xml version="1.0" encoding="UTF-8"?&gt;&lt;record_update sys_domain="global" table="sys_script_client"&gt;
+    &lt;sys_script_client action="INSERT_OR_UPDATE"&gt;
+        &lt;active&gt;false&lt;/active&gt;
+        &lt;applies_extended&gt;false&lt;/applies_extended&gt;
+        &lt;condition/&gt;
+        &lt;description/&gt;
+        &lt;field&gt;mjml&lt;/field&gt;
+        &lt;global&gt;true&lt;/global&gt;
+        &lt;isolate_script&gt;true&lt;/isolate_script&gt;
+        &lt;messages/&gt;
+        &lt;name&gt;test cs&lt;/name&gt;
+        &lt;order/&gt;
+        &lt;script&gt;&lt;![CDATA[function onSubmit() {
+   //Type appropriate comment here, and begin script below
+	var modifiedFields = g_form.modifiedFields.x_298439_mjml_templates
+	if(modifiedFields.mjml &amp;&amp; modifiedFields.html){// if mjml changed, and html changed
+		return true
+	}
+	return false;
+   	g_form.hideFieldMsg('mjml', true);
+	g_form.showFieldMsg('mjml','Loading...','info');
+    var ga = new GlideAjax('x_298439_mjml.util');
+    ga.addParam('sysparm_name', 'transpile');
+    ga.addParam('sysparm_obj', JSON.stringify({
+        "mjml": g_form.getValue('mjml'),
+        "sys_id": g_form.getValue('sys_id')
+    }));
+    ga.getXML(function waitForResponse(response) {
+		g_form.hideFieldMsg('mjml', true);
+        var responseDocument = response.responseXML.documentElement;
+        var answer = responseDocument.getAttribute('answer');
+        var serverObj = JSON.parse(answer);
+		g_form.setValue('html', serverObj.html)
+		x_298439_ui.ui.setHTML(serverObj.html)
+		return true;
+    })
+	return false;
+}]]&gt;&lt;/script&gt;
+        &lt;sys_class_name&gt;sys_script_client&lt;/sys_class_name&gt;
+        &lt;sys_created_by&gt;jacebenson&lt;/sys_created_by&gt;
+        &lt;sys_created_on&gt;2022-04-17 21:26:25&lt;/sys_created_on&gt;
+        &lt;sys_domain&gt;global&lt;/sys_domain&gt;
+        &lt;sys_domain_path&gt;/&lt;/sys_domain_path&gt;
+        &lt;sys_id&gt;e5d2666f2fb2c110bd54d5f62799b657&lt;/sys_id&gt;
+        &lt;sys_mod_count&gt;13&lt;/sys_mod_count&gt;
+        &lt;sys_name&gt;test cs&lt;/sys_name&gt;
+        &lt;sys_overrides/&gt;
+        &lt;sys_package display_value="MJML" source="x_298439_mjml"&gt;2eb6ab4f2f62c1100ed2ff1df699b610&lt;/sys_package&gt;
+        &lt;sys_policy/&gt;
+        &lt;sys_scope display_value="MJML"&gt;2eb6ab4f2f62c1100ed2ff1df699b610&lt;/sys_scope&gt;
+        &lt;sys_update_name&gt;sys_script_client_e5d2666f2fb2c110bd54d5f62799b657&lt;/sys_update_name&gt;
+        &lt;sys_updated_by&gt;jacebenson&lt;/sys_updated_by&gt;
+        &lt;sys_updated_on&gt;2022-04-18 00:07:44&lt;/sys_updated_on&gt;
+        &lt;table&gt;x_298439_mjml_templates&lt;/table&gt;
+        &lt;type&gt;onSubmit&lt;/type&gt;
+        &lt;ui_type&gt;10&lt;/ui_type&gt;
+        &lt;view/&gt;
+    &lt;/sys_script_client&gt;
+&lt;/record_update&gt;</payload>
+        <payload_hash>311373279</payload_hash>
+        <record_name>test cs</record_name>
+        <reverted_from/>
+        <source>44ec1a3593333110b6a3367f3bba107f</source>
+        <source_table>sys_upgrade_history</source_table>
+        <state>current</state>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2024-01-18 16:06:53</sys_created_on>
+        <sys_id>42ec9a3593333110b6a3367f3bba105b</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_recorded_at>18d1d5347c70000001</sys_recorded_at>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2024-01-18 16:06:53</sys_updated_on>
+        <type>Client Script</type>
+        <update_guid>02ec9a35c6333110cc67958ff9c5945b</update_guid>
+        <update_guid_history>02ec9a35c6333110cc67958ff9c5945b:311373279</update_guid_history>
+    </sys_update_version>
+    <sys_metadata_delete action="INSERT_OR_UPDATE">
+        <sys_audit_delete/>
+        <sys_class_name>sys_metadata_delete</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2024-01-19 17:31:17</sys_created_on>
+        <sys_db_object display_value="" name="sys_script_client">sys_script_client</sys_db_object>
+        <sys_id>0ecf2f918070404286cb9899bb194401</sys_id>
+        <sys_metadata>e5d2666f2fb2c110bd54d5f62799b657</sys_metadata>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>test cs</sys_name>
+        <sys_package display_value="MJML" source="x_298439_mjml">2eb6ab4f2f62c1100ed2ff1df699b610</sys_package>
+        <sys_parent display_value="Templates">6cec1a3593333110b6a3367f3bba10bb</sys_parent>
+        <sys_policy/>
+        <sys_scope display_value="MJML">2eb6ab4f2f62c1100ed2ff1df699b610</sys_scope>
+        <sys_scope_delete display_value="">147ba54de0824e60929d8e416c836400</sys_scope_delete>
+        <sys_update_name>sys_script_client_e5d2666f2fb2c110bd54d5f62799b657</sys_update_name>
+        <sys_update_version display_value="sys_script_client_e5d2666f2fb2c110bd54d5f62799b657">42ec9a3593333110b6a3367f3bba105b</sys_update_version>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2024-01-19 17:31:17</sys_updated_on>
+    </sys_metadata_delete>
+</record_update>

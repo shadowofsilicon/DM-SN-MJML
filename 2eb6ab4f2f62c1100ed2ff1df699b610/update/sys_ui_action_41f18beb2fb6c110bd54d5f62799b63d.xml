@@ -31,21 +31,38 @@
         <onclick>generateHTML()</onclick>
         <order>100</order>
         <script><![CDATA[function generateHTML() {
-	g_form.hideFieldMsg('mjml', true);
-	g_form.showFieldMsg('mjml','Generating...','info');
+    g_form.hideFieldMsg('mjml', true);
+    g_form.showFieldMsg('mjml', 'Generating...', 'info');
     var ga = new GlideAjax('x_298439_mjml.util');
     ga.addParam('sysparm_name', 'transpile');
     ga.addParam('sysparm_obj', JSON.stringify({
         "mjml": g_form.getValue('mjml'),
-        "sys_id": g_form.getValue('sys_id')
+        "sys_id": g_form.getUniqueValue(),
     }));
     ga.getXML(function(response) {
-		g_form.hideFieldMsg('mjml', true);
         var responseDocument = response.responseXML.documentElement;
         var answer = responseDocument.getAttribute('answer');
+        g_form.hideFieldMsg('mjml', true);
+        if (!answer) {
+            g_form.showFieldMsg('mjml', "Error: no answer returned from ajax call", "error");
+            return;
+        }
         var serverObj = JSON.parse(answer);
-		g_form.setValue('html', serverObj.html)
-		x_298439_ui.ui.setHTML(serverObj.html)
+        if (serverObj.error) {
+            g_form.showFieldMsg('mjml', serverObj.error, "error");
+        } else {
+            var mjml_errors = JSON.parse(serverObj.mjml_errors);
+            if (mjml_errors.length > 0) {			
+				for (var i = 0; i < mjml_errors.length; i++) {
+					var mjml_error_message = "Line " + mjml_errors[i].line + ": " + mjml_errors[i].message;
+					g_form.showFieldMsg('mjml', mjml_error_message, "error");
+				}
+            } else {
+                g_form.showFieldMsg('mjml', "HTML email template successfully! To commit this change, click Update.");
+            }
+            g_form.setValue('html', serverObj.html);
+            x_298439_ui.ui.setHTML(serverObj.html);
+        }
     });
 }]]></script>
         <show_insert>true</show_insert>
@@ -58,15 +75,15 @@
         <sys_domain>global</sys_domain>
         <sys_domain_path>/</sys_domain_path>
         <sys_id>41f18beb2fb6c110bd54d5f62799b63d</sys_id>
-        <sys_mod_count>1</sys_mod_count>
+        <sys_mod_count>57</sys_mod_count>
         <sys_name>Generate HTML</sys_name>
         <sys_overrides/>
         <sys_package display_value="MJML" source="x_298439_mjml">2eb6ab4f2f62c1100ed2ff1df699b610</sys_package>
         <sys_policy/>
         <sys_scope display_value="MJML">2eb6ab4f2f62c1100ed2ff1df699b610</sys_scope>
         <sys_update_name>sys_ui_action_41f18beb2fb6c110bd54d5f62799b63d</sys_update_name>
-        <sys_updated_by>jacebenson</sys_updated_by>
-        <sys_updated_on>2022-04-18 01:05:22</sys_updated_on>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2024-01-19 21:44:38</sys_updated_on>
         <table>x_298439_mjml_templates</table>
         <ui11_compatible>true</ui11_compatible>
         <ui16_compatible>false</ui16_compatible>
